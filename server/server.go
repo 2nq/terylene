@@ -496,6 +496,7 @@ func uploadmethod(meth Method, pub *zmq.Socket) {
 		log.Println(err)
 		return
 	}
+	defer file.Close()
 
 	name := meth.name
 	fileInfo, err := os.Stat(filePath)
@@ -511,12 +512,6 @@ func uploadmethod(meth Method, pub *zmq.Socket) {
 	}
 
 	filename := fileInfo.Name()
-	if err != nil {
-		log.Printf("could not open file: %v\n", err)
-		return
-	}
-
-	defer file.Close()
 
 	reader := bufio.NewReader(file)
 	buffer := make([]byte, chunkSize)

