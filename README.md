@@ -1,20 +1,21 @@
 ![ZeroC2](https://github.com/BishopFox/sliver/assets/93959737/37af624e-9935-40d2-b2ff-630c53e3ec21)
 
+## Project Paused
+
 
 # WARNING
-**THIS IS ONLY FOR EDUCATION PURPOSES**
+**THIS IS NOT INTENDED FOR ACTUAL DDOS**
 
-**UTILIZING THIS FOR ACTUAL DDOS ATTACKS IS ABSOLUTELY CONDEMNED AND COULD RESULT IN SERIOUS LEGAL CONSEQUENCES**
+**THIS IS PRIMARILY AN IOT/SERVER ORCHESTRATION FRAMEWORK INSPIRED BY MIRAI, UTILIZING THIS FOR ACTUAL DDOS ATTACKS IS ABSOLUTELY CONDEMNED AND COULD RESULT IN SERIOUS LEGAL CONSEQUENCES**
 
-## Still in DEVELOPMENT
 
 ZeroC2 Features:
 ```diff
 # Duplex heartbeat monitoring
 # connection deduplication mechanism
 # Made in Golang + ZeroMq
-# able to handle over 500k botnets
-# heartbeat sensor to track bots
+# able to handle over 500k IOTs
+# heartbeat sensor to track IOT
 # migration and transfer
 # Decentralized
 ```
@@ -27,8 +28,7 @@ Terylene Features:
 # Made in Golang
 # Able to scan and spread through local network
 # Builtin Loader
-# Fast concurrent Worm spreading
-# UDP, TCP, UDPRAPE, Modified UDP, HTTP, SYN flood
+# Fast concurrent 'Worm' spreading
 ```
 
 Updated features 0.2.4:
