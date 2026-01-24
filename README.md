@@ -24,25 +24,7 @@ Terylene Features:
 # Mother priority mechanism
 # Made in Golang
 # Able to scan IOT through local network
-# Builtin Loader
-```
-
-Updated features 0.2.4:
-
-```diff
-+ fixed a RW thread issue 
-+ added custom method feature
-+ added API webserver
-+ optimized some codes
-+ cleaned some codes
-```
-
-
-Upcoming features for 0.3.0:
-```diff
-- docker support
-- clean my clusterfucked up codebase
-- add more methods (fr this time)
+# Builtin Bootstrapper
 ```
 
 # [ZeroC2 wiki](https://github.com/polymaster3313/terylene/wiki/Introduction) 
