@@ -26,9 +26,8 @@ Terylene Features:
 # Retrying and Backoff mechanism
 # Mother priority mechanism
 # Made in Golang
-# Able to scan and spread through local network
+# Able to scan IOT through local network
 # Builtin Loader
-# Fast concurrent 'Worm' spreading
 ```
 
 Updated features 0.2.4:
