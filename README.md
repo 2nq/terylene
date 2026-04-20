@@ -8,10 +8,9 @@ This project is intended for **educational and security research purposes only**
 It demonstrates distributed systems concepts inspired by historical IoT botnet 
 architectures for the purpose of understanding and defending against such threats.
 
-Do not use this software for unauthorized access to devices or networks.
+**Do not use this software for unauthorized access to devices or networks.**
 
-**THIS IS PRIMARILY AN IOT/SERVER ORCHESTRATION FRAMEWORK**
-
+**This is primarily an IOT Orchestration tool now**
 
 ZeroC2 Features:
 ```diff
